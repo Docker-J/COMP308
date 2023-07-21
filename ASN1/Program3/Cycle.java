@@ -28,8 +28,9 @@ public class Cycle {
 }
 
 class Unicycle extends Cycle{
-    int wheels;
-    super(wheels);
+    Unicycle() {
+        super(1);
+    }
     // @Override
     // public void ride() {
     //     System.out.println("Riding a unicycle.");
@@ -37,7 +38,9 @@ class Unicycle extends Cycle{
 }
 
 class Bicycle extends Cycle{
-    int wheels = 2;
+    Bicycle() {
+        super(2);
+    }
     // @Override
     // public void ride() {
     //     System.out.println("Riding a bicycle.");
@@ -45,7 +48,9 @@ class Bicycle extends Cycle{
 }
 
 class Tricycle extends Cycle{
-    int wheels = 3;
+    Tricycle() {
+        super(3);
+    }
     // @Override
     // public void ride() {
     //     System.out.println("Riding a tricycle.");
