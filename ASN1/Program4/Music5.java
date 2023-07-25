@@ -1,4 +1,5 @@
 package Program4;
+import static net.mindview.util.Print.*;
 
 interface Instrument {
     int VALUE = 5;
@@ -10,11 +11,8 @@ interface Playable {
     void play(Note n);
 }
 
-abstract class Print {
-    abstract void print(String s);
-}
 
-class Wind extends Print implements Instrument, Playable {
+class Wind implements Instrument, Playable {
     public void play(Note n) {
         print(this + ".play() " + n);
     }
@@ -26,14 +24,9 @@ class Wind extends Print implements Instrument, Playable {
     public void adjust() {
         print(this + ".adjust()");
     }
-
-    @Override
-    public void print(String s) {
-        System.out.println(s);
-    }
 }
 
-class Percussion extends Print implements Instrument, Playable {
+class Percussion implements Instrument, Playable {
     public void play(Note n) {
         print(this + ".play() " + n);
     }
@@ -45,14 +38,9 @@ class Percussion extends Print implements Instrument, Playable {
     public void adjust() {
         print(this + ".adjust()");
     }
-
-    @Override
-    public void print(String s) {
-        System.out.println(s);
-    }
 }
 
-class Stringed extends Print implements Instrument, Playable {
+class Stringed implements Instrument, Playable {
     public void play(Note n) {
         print(this + ".play() " + n);
     }
@@ -63,11 +51,6 @@ class Stringed extends Print implements Instrument, Playable {
 
     public void adjust() {
         print(this + ".adjust()");
-    }
-
-    @Override
-    public void print(String s) {
-        System.out.println(s);
     }
 }
 
