@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class OrderProcessor {
-    private List<GenericOrder<?, ?, ?>> orders;
+    private List<GenericOrder<?>> orders;
 
     private Map<UUID, List<ComputerPart>> computerPartOrders;
     private Map<UUID, List<Peripheral>> peripheralOrders;
@@ -18,12 +18,12 @@ public class OrderProcessor {
         this.serviceOrders = new HashMap<>();
      }
 
-    public void accept(GenericOrder<?, ?, ?> order) {
+    public void accept(GenericOrder<?> order) {
         orders.add(order);
     }
 
     public void process() {
-        for(GenericOrder<?, ?, ?> order: orders) {
+        for(GenericOrder<?> order: orders) {
             UUID orderId = order.getOrderId();
             List<?> items = order.getItems();
 

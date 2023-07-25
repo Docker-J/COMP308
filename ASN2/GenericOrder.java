@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class GenericOrder<T extends Product, S extends Product, V extends Product> {
-    private ArrayList<Product> items;
+public class GenericOrder<T> {
+    private ArrayList<T> items;
     private UUID orderNumber;
 
     public GenericOrder() {
@@ -14,16 +14,16 @@ public class GenericOrder<T extends Product, S extends Product, V extends Produc
         return orderNumber;
     }
 
-    public void addItem(Product item) {
+    public void addItem(T item) {
         items.add(item);
     }
 
-    public ArrayList<Product> getItems() {
+    public ArrayList<T> getItems() {
         return items;
     }
 }
 
-class ComputerOrder extends GenericOrder<ComputerPart, Peripheral, Service> {
+class ComputerOrder extends GenericOrder<Product> {
 
     public ComputerOrder() {
         super();
@@ -42,7 +42,7 @@ class ComputerOrder extends GenericOrder<ComputerPart, Peripheral, Service> {
     }
 }
 
-class PartyTrayOrder extends GenericOrder<Cheese, Fruit, Service> {
+class PartyTrayOrder extends GenericOrder<Product> {
     
     public PartyTrayOrder() {
         super();
@@ -61,7 +61,7 @@ class PartyTrayOrder extends GenericOrder<Cheese, Fruit, Service> {
     }
 }
 
-class ComputerPartyOrder extends GenericOrder<Cheese, Fruit, Service> {
+class ComputerPartyOrder extends GenericOrder<Product> {
     
     public ComputerPartyOrder() {
         super();
