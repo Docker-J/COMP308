@@ -23,67 +23,20 @@ public class GenericOrder<T> {
     }
 }
 
-class ComputerOrder extends GenericOrder<Product> {
-
+class ComputerOrder extends GenericOrder<IComputerOrder> {
     public ComputerOrder() {
         super();
     }
-    
-    public void addItem(ComputerPart computerPart) {
-        super.addItem(computerPart);
-    }
-
-    public void addItem(Peripheral peripheral) {
-        super.addItem(peripheral);
-    }
-
-    public void addItem(Service service) {
-        super.addItem(service);
-    }
 }
 
-class PartyTrayOrder extends GenericOrder<Product> {
-    
+class PartyTrayOrder extends GenericOrder<IPartyTrayOrder> {
     public PartyTrayOrder() {
         super();
     }
-    
-    public void addItem(Cheese cheese) {
-        super.addItem(cheese);
-    }
-
-    public void addItem(Fruit fruit) {
-        super.addItem(fruit);
-    }
-
-    public void addItem(Service service) {
-        super.addItem(service);
-    }
 }
 
-class ComputerPartyOrder extends GenericOrder<Product> {
-    
+class ComputerPartyOrder extends GenericOrder<IComputerPartyOrder> {
     public ComputerPartyOrder() {
         super();
-    }
-
-    public void addItem(ComputerPart computerPart) {
-        super.addItem(computerPart);
-    }
-
-    public void addItem(Peripheral peripheral) {
-        super.addItem(peripheral);
-    }
-    
-    public void addItem(Cheese cheese) {
-        super.addItem(cheese);
-    }
-
-    public void addItem(Fruit fruit) {
-        super.addItem(fruit);
-    }
-
-    public void addItem(Service service) {
-        super.addItem(service);
     }
 }

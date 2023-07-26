@@ -19,15 +19,21 @@ package ASN3;
  */
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ASN3.tme3.*;
+
+interface Fixable {
+  // turns Power on, fix window and zeros out error codes
+  void fix();
+
+  // logs to a text file in the current directory called fix.log
+  // prints to the console, and identify time and nature of
+  // the fix
+  void log();
+}
 
 public class GreenhouseControls extends Controller {
   private boolean light = false;
@@ -41,7 +47,26 @@ public class GreenhouseControls extends Controller {
 
   @Override
   public void shutdown() {
+    if (errorcode == 1) {
+      System.out.println(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
+
+    } else if (errorcode == 2) {
+      System.out.println(System.currentTimeMillis() + " PowerOut " + errorcode);
+    }
     System.exit(0);
+  }
+
+  int getError() {
+    return errorcode;
+  };
+
+  Fixable getFixable(int errorcode) {
+    this.errorcode = 0;
+    if (errorcode == 1) {
+      return new FixWindow();
+    }
+
+    return new PowerOn();
   }
 
   public class LightOn extends Event {
@@ -193,12 +218,21 @@ public class GreenhouseControls extends Controller {
     }
 
     @Override
-    public void action() {
+    public void action() throws ControllerException {
       errorcode = 1;
       windowok = false;
-      throw new Exception("WindowMalfunction");
+      throw new ControllerException("WindowMalfunction");
     }
 
+    public String toString() {
+      return "Winwdow Malfunction!";
+    }
+  }
+
+  public class ControllerException extends Exception {
+    public ControllerException(String errorMessage) {
+      super(errorMessage);
+    }
   }
 
   public class PowerOut extends Event {
@@ -208,12 +242,44 @@ public class GreenhouseControls extends Controller {
     }
 
     @Override
-    public void action() {
+    public void action() throws ControllerException {
       errorcode = 2;
       poweron = false;
-      throw new Exception("PowerOut");
+      throw new ControllerException("PowerOut");
     }
 
+    public String toString() {
+      return "Power Outage!";
+    }
+  }
+
+  public class PowerOn implements Fixable {
+
+    @Override
+    public void fix() {
+      poweron = true;
+
+    }
+
+    @Override
+    public void log() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'log'");
+    }
+  }
+
+  public class FixWindow implements Fixable {
+
+    @Override
+    public void fix() {
+      windowok = true;
+    }
+
+    @Override
+    public void log() {
+      // TODO Auto-generated method stub
+      throw new UnsupportedOperationException("Unimplemented method 'log'");
+    }
   }
 
   public class Restart extends Event {
@@ -307,6 +373,22 @@ public class GreenhouseControls extends Controller {
     }
   }
 
+  public class Restore {
+
+    public Restore(String dump) {
+      File file = new File(dump);
+
+      try {
+        Scanner sc = new Scanner(file);
+        while (sc.hasNextLine()) {
+
+        }
+      } catch (Exception e) {
+        // TODO: handle exception
+      }
+    }
+  }
+
   public static void printUsage() {
     System.out.println("Correct format: ");
     System.out.println("  java GreenhouseControls -f <filename>, or");
@@ -328,6 +410,8 @@ public class GreenhouseControls extends Controller {
 
       if (option.equals("-f")) {
         gc.addEvent(gc.new Restart(0, filename));
+      } else if (option.equals("-d")) {
+        gc.new Restore(filename);
       }
 
       gc.run();
