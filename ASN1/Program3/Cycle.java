@@ -1,15 +1,22 @@
-package Program3;
+/* Author: Junesung Lee 
+ * Student ID: 3643836
+ * Date: Jul 17th, 2023
+ * 
+ * TIJ Page 286, Exercise 5
+*/
 
-public class Cycle {
-    int wheels;
+public abstract class Cycle {
+    private int wheels;
+    private String type;
 
-    Cycle(int wheels) {
+    Cycle(int wheels, String type) {
         this.wheels = wheels;
+        this.type = type;
     }
 
     public void ride() {
-        System.out.println("Riding a cycle.");
-        System.out.println("Number of wheels: " + this.wheels());
+        System.out.println("Riding a " + this.type + ".");
+        System.out.println("Number of wheel(s): " + this.wheels());
     }
 
     public int wheels() {
@@ -17,9 +24,9 @@ public class Cycle {
     }
 
     public static void main(String[] args) {
-        Cycle uni = new Unicycle();
-        Cycle bi = new Bicycle();
-        Cycle tri = new Tricycle();
+        Unicycle uni = new Unicycle();
+        Bicycle bi = new Bicycle();
+        Tricycle tri = new Tricycle();
 
         uni.ride();
         bi.ride();
@@ -27,32 +34,20 @@ public class Cycle {
     }
 }
 
-class Unicycle extends Cycle{
+class Unicycle extends Cycle {
     Unicycle() {
-        super(1);
+        super(1, "Unicycle");
     }
-    // @Override
-    // public void ride() {
-    //     System.out.println("Riding a unicycle.");
-    // }
 }
 
-class Bicycle extends Cycle{
+class Bicycle extends Cycle {
     Bicycle() {
-        super(2);
+        super(2, "Bicycle");
     }
-    // @Override
-    // public void ride() {
-    //     System.out.println("Riding a bicycle.");
-    // }
 }
 
-class Tricycle extends Cycle{
+class Tricycle extends Cycle {
     Tricycle() {
-        super(3);
+        super(3, "Tricycle");
     }
-    // @Override
-    // public void ride() {
-    //     System.out.println("Riding a tricycle.");
-    // }
 }

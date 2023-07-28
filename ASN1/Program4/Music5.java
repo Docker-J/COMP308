@@ -1,4 +1,10 @@
-package Program4;
+/* Author: Junesung Lee 
+ * Student ID: 3643836
+ * Date: Jul 17th, 2023
+ * 
+ * TIJ Page 320, Exercise 10
+*/
+
 import static net.mindview.util.Print.*;
 
 interface Instrument {
@@ -10,7 +16,6 @@ interface Instrument {
 interface Playable {
     void play(Note n);
 }
-
 
 class Wind implements Instrument, Playable {
     public void play(Note n) {
@@ -72,14 +77,14 @@ public class Music5 {
     }
 
     static void tuneAll(Playable[] e) {
-        for(Playable p : e) {
+        for (Playable p : e) {
             tune(p);
         }
     }
 
     public static void main(String[] args) {
         Playable[] orchestra = {
-            new Wind(), new Percussion(), new Stringed(), new Brass(), new Woodwind()
+                new Wind(), new Percussion(), new Stringed(), new Brass(), new Woodwind()
         };
         tuneAll(orchestra);
     }

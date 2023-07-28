@@ -1,3 +1,20 @@
+/* Author: Junesung Lee 
+ * Student ID: 3643836
+ * Date: Jul 17th, 2023
+ * 
+ * ShippingLabel is a class that stores two mailing addresses, ship-from and ship-to.
+ * The class is able to format the shipping label.
+ * e.g.) "From: FullName
+ * Street Address, City, Province, Postal Code"
+ * 
+ * "To: FullName
+ * Street Address, City, Province, Postal Code"
+ * 
+ * Description:
+ * -public Shippinglabel(MailingAddress shipFrom, MailngAddress shipTo) - getting two MailingAddress objects
+ * -public toString() - format the label
+*/
+
 import java.util.*;
 
 public class OrderProcessor {
@@ -9,25 +26,25 @@ public class OrderProcessor {
     private Map<UUID, List<Fruit>> fruitOrders;
     private Map<UUID, List<Service>> serviceOrders;
 
-     public OrderProcessor() {
+    public OrderProcessor() {
         this.orders = new ArrayList<>();
         this.computerPartOrders = new HashMap<>();
         this.peripheralOrders = new HashMap<>();
         this.cheeseOrders = new HashMap<>();
         this.fruitOrders = new HashMap<>();
         this.serviceOrders = new HashMap<>();
-     }
+    }
 
     public void accept(GenericOrder<?> order) {
         orders.add(order);
     }
 
     public void process() {
-        for(GenericOrder<?> order: orders) {
+        for (GenericOrder<?> order : orders) {
             UUID orderId = order.getOrderId();
             List<?> items = order.getItems();
 
-            for (Object item: items) {
+            for (Object item : items) {
                 if (item instanceof ComputerPart) {
                     ComputerPart computerPart = (ComputerPart) item;
                     computerPartOrders.computeIfAbsent(orderId, k -> new ArrayList<>()).add(computerPart);
@@ -56,13 +73,16 @@ public class OrderProcessor {
             for (ComputerPart computerPart : computerParts) {
                 if (computerPart instanceof Motherboard) {
                     Motherboard motherboard = (Motherboard) computerPart;
-                    System.out.println("Motherboard     name=" + motherboard.getManufacturer() + ", price=" + motherboard.price() + ", order number=" + orderId);
+                    System.out.println("Motherboard     name=" + motherboard.getManufacturer() + ", price="
+                            + motherboard.price() + ", order number=" + orderId);
                 } else if (computerPart instanceof RAM) {
                     RAM ram = (RAM) computerPart;
-                    System.out.println("RAM     name=" + ram.getManufacturer() + ", size=" + ram.size + ", price=" + ram.price() + ", order number=" + orderId);
+                    System.out.println("RAM     name=" + ram.getManufacturer() + ", size=" + ram.size + ", price="
+                            + ram.price() + ", order number=" + orderId);
                 } else if (computerPart instanceof Drive) {
                     Drive drive = (Drive) computerPart;
-                    System.out.println("Drive     type=" + drive.getType() + ", speed=" + drive.getSpeed() + ", price=" + drive.price() +", order number=" + orderId);
+                    System.out.println("Drive     type=" + drive.getType() + ", speed=" + drive.getSpeed() + ", price="
+                            + drive.price() + ", order number=" + orderId);
                 }
             }
         }
@@ -76,10 +96,12 @@ public class OrderProcessor {
             for (Peripheral peripheral : peripherals) {
                 if (peripheral instanceof Printer) {
                     Printer printer = (Printer) peripheral;
-                    System.out.println("Printer     model=" + printer.getModel() + ", price=" + printer.price() + ", order number=" + orderId);
+                    System.out.println("Printer     model=" + printer.getModel() + ", price=" + printer.price()
+                            + ", order number=" + orderId);
                 } else if (peripheral instanceof Monitor) {
                     Monitor monitor = (Monitor) peripheral;
-                    System.out.println("Monitor     model=" + monitor.getModel() + ", price=" + monitor.price() + ", order number=" + orderId);
+                    System.out.println("Monitor     model=" + monitor.getModel() + ", price=" + monitor.price()
+                            + ", order number=" + orderId);
                 }
             }
         }
@@ -93,10 +115,12 @@ public class OrderProcessor {
             for (Service service : services) {
                 if (service instanceof AssemblyService) {
                     AssemblyService assemblyService = (AssemblyService) service;
-                    System.out.println("AssemblyService     provider=" + assemblyService.getProvider() + ", price=" + assemblyService.price() + ", order number=" + orderId);
+                    System.out.println("AssemblyService     provider=" + assemblyService.getProvider() + ", price="
+                            + assemblyService.price() + ", order number=" + orderId);
                 } else if (service instanceof DeliveryService) {
                     DeliveryService deliveryService = (DeliveryService) service;
-                    System.out.println("DeliveryService     courier=" + deliveryService.getCourier() + ", price=" + deliveryService.price() + ", order number=" + orderId);
+                    System.out.println("DeliveryService     courier=" + deliveryService.getCourier() + ", price="
+                            + deliveryService.price() + ", order number=" + orderId);
                 }
             }
         }

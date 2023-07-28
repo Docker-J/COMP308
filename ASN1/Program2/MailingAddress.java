@@ -1,4 +1,16 @@
-package Program2;
+/* Author: Junesung Lee 
+ * Student ID: 3643836
+ * Date: Jul 17th, 2023
+ * 
+ * MailingAddress is a class that stores a individual's mailing address, with separate fields, fullName object, stree address, city, province, and postal code.
+ * The class is able to format the address.
+ * e.g.) "FullName
+ * Street Address, City, Province, Postal Code"
+ * 
+ * Description:
+ * -public MailingAddress(FullName fullName, String streeAddress, String city, String province, String postalcode) - getting address information with separte fields.
+ * -public toString() - format the address info that stored in the object
+*/
 
 public class MailingAddress {
     private FullName fullName;

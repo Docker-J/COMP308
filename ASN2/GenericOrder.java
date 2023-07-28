@@ -1,3 +1,20 @@
+/* Author: Junesung Lee 
+ * Student ID: 3643836
+ * Date: Jul 17th, 2023
+ * 
+ * ShippingLabel is a class that stores two mailing addresses, ship-from and ship-to.
+ * The class is able to format the shipping label.
+ * e.g.) "From: FullName
+ * Street Address, City, Province, Postal Code"
+ * 
+ * "To: FullName
+ * Street Address, City, Province, Postal Code"
+ * 
+ * Description:
+ * -public Shippinglabel(MailingAddress shipFrom, MailngAddress shipTo) - getting two MailingAddress objects
+ * -public toString() - format the label
+*/
+
 import java.util.ArrayList;
 import java.util.UUID;
 
