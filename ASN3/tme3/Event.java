@@ -19,9 +19,7 @@ package ASN3.tme3;
 
 import java.io.*;
 
-import ASN3.GreenhouseControls.ControllerException;
-
-public abstract class Event {
+public abstract class Event implements Serializable {
   private long eventTime;
   protected final long delayTime;
 

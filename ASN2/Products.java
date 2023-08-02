@@ -19,6 +19,8 @@ abstract class Product {
 
 // ------------------------------------------------------------
 
+// These three iterfaces are added to distinguish the proper order for the
+// product
 interface IComputerOrder {
 }
 

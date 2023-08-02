@@ -47,13 +47,27 @@ public class GreenhouseControls extends Controller {
 
   @Override
   public void shutdown() {
-    if (errorcode == 1) {
-      System.out.println(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
+    try {
+      FileWriter errorLog = new FileWriter("error.log");
+      if (errorcode == 1) {
+        System.out.println(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
+        errorLog.write(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
+      } else if (errorcode == 2) {
+        System.out.println(System.currentTimeMillis() + " PowerOut " + errorcode);
+        errorLog.write(System.currentTimeMillis() + " PowerOut " + errorcode);
+      }
+      errorLog.close();
 
-    } else if (errorcode == 2) {
-      System.out.println(System.currentTimeMillis() + " PowerOut " + errorcode);
+      FileOutputStream dumpOut = new FileOutputStream(new File("dump.out"));
+      ObjectOutputStream out = new ObjectOutputStream(dumpOut);
+      out.writeObject(this);
+      out.close();
+      dumpOut.close();
+
+      System.exit(-1);
+    } catch (IOException exception) {
+      System.out.println(exception);
     }
-    System.exit(0);
   }
 
   int getError() {
@@ -61,7 +75,6 @@ public class GreenhouseControls extends Controller {
   };
 
   Fixable getFixable(int errorcode) {
-    this.errorcode = 0;
     if (errorcode == 1) {
       return new FixWindow();
     }
@@ -201,9 +214,6 @@ public class GreenhouseControls extends Controller {
 
     public void action() {
       // nothing to do
-      if (ring > 1) {
-        addEvent(new Bell(2000, ring - 1));
-      }
     }
 
     public String toString() {
@@ -226,12 +236,6 @@ public class GreenhouseControls extends Controller {
 
     public String toString() {
       return "Winwdow Malfunction!";
-    }
-  }
-
-  public class ControllerException extends Exception {
-    public ControllerException(String errorMessage) {
-      super(errorMessage);
     }
   }
 
@@ -258,13 +262,13 @@ public class GreenhouseControls extends Controller {
     @Override
     public void fix() {
       poweron = true;
-
+      errorcode = 0;
+      this.log();
     }
 
     @Override
     public void log() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'log'");
+      System.out.println("Power On!");
     }
   }
 
@@ -273,12 +277,13 @@ public class GreenhouseControls extends Controller {
     @Override
     public void fix() {
       windowok = true;
+      errorcode = 0;
+      this.log();
     }
 
     @Override
     public void log() {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'log'");
+      System.out.println("Window Fixed!");
     }
   }
 
@@ -331,7 +336,10 @@ public class GreenhouseControls extends Controller {
                 addEvent(new ThermostatDay(time));
                 break;
               case "Bell":
-                addEvent(new Bell(time, ring));
+                for (int i = 0; i < ring; i++) {
+                  addEvent(new Bell(time, ring));
+                  time += 2000;
+                }
                 break;
               case "WindowMalfunction":
                 addEvent(new WindowMalfunction(time));
@@ -376,15 +384,18 @@ public class GreenhouseControls extends Controller {
   public class Restore {
 
     public Restore(String dump) {
-      File file = new File(dump);
-
+      System.out.println("Restoring System");
       try {
-        Scanner sc = new Scanner(file);
-        while (sc.hasNextLine()) {
+        FileInputStream file = new FileInputStream(new File(dump));
+        ObjectInputStream ois = new ObjectInputStream(file);
+        GreenhouseControls gc = (GreenhouseControls) ois.readObject();
+        ois.close();
+        file.close();
 
-        }
+        gc.getFixable(gc.getError()).fix();
+        gc.run();
       } catch (Exception e) {
-        // TODO: handle exception
+        System.out.println("No file found");
       }
     }
   }

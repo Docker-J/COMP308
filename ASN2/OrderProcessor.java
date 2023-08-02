@@ -2,29 +2,25 @@
  * Student ID: 3643836
  * Date: Jul 17th, 2023
  * 
- * ShippingLabel is a class that stores two mailing addresses, ship-from and ship-to.
- * The class is able to format the shipping label.
- * e.g.) "From: FullName
- * Street Address, City, Province, Postal Code"
- * 
- * "To: FullName
- * Street Address, City, Province, Postal Code"
+ * OrderProcessor class is help to accept, sort and dispatching multiple orders.
  * 
  * Description:
- * -public Shippinglabel(MailingAddress shipFrom, MailngAddress shipTo) - getting two MailingAddress objects
- * -public toString() - format the label
+ * -public OrderProcessor(): Default constructor
+ * -public <T extends GenericOrder<?>> void accept(T order): Accept Order that extends GenericOrder.
+ * -public void process(): Sorting the accepted order through accept(T order) method by the product types(Computer Part, Peripheral, Cheese, Fruit, Service) and removes them from the accepted order list.
+ * -public void dispatch*****(): Dispatching the processed order with the product description. Prints out the products and removes them from the lists of sorted products.
 */
 
 import java.util.*;
 
 public class OrderProcessor {
-    private List<GenericOrder<?>> orders;
+    private ArrayList<GenericOrder<?>> orders;
 
-    private Map<UUID, List<ComputerPart>> computerPartOrders;
-    private Map<UUID, List<Peripheral>> peripheralOrders;
-    private Map<UUID, List<Cheese>> cheeseOrders;
-    private Map<UUID, List<Fruit>> fruitOrders;
-    private Map<UUID, List<Service>> serviceOrders;
+    private Map<UUID, ArrayList<ComputerPart>> computerPartOrders;
+    private Map<UUID, ArrayList<Peripheral>> peripheralOrders;
+    private Map<UUID, ArrayList<Cheese>> cheeseOrders;
+    private Map<UUID, ArrayList<Fruit>> fruitOrders;
+    private Map<UUID, ArrayList<Service>> serviceOrders;
 
     public OrderProcessor() {
         this.orders = new ArrayList<>();
@@ -35,14 +31,14 @@ public class OrderProcessor {
         this.serviceOrders = new HashMap<>();
     }
 
-    public void accept(GenericOrder<?> order) {
+    public <T extends GenericOrder<?>> void accept(T order) {
         orders.add(order);
     }
 
     public void process() {
         for (GenericOrder<?> order : orders) {
             UUID orderId = order.getOrderId();
-            List<?> items = order.getItems();
+            ArrayList<?> items = order.getItems();
 
             for (Object item : items) {
                 if (item instanceof ComputerPart) {
@@ -63,12 +59,14 @@ public class OrderProcessor {
                 }
             }
         }
+        orders.clear();
     }
 
     public void dispatchComputerParts() {
-        for (Map.Entry<UUID, List<ComputerPart>> entry : computerPartOrders.entrySet()) {
+        System.out.println("----------Computer Parts----------");
+        for (Map.Entry<UUID, ArrayList<ComputerPart>> entry : computerPartOrders.entrySet()) {
             UUID orderId = entry.getKey();
-            List<ComputerPart> computerParts = entry.getValue();
+            ArrayList<ComputerPart> computerParts = entry.getValue();
 
             for (ComputerPart computerPart : computerParts) {
                 if (computerPart instanceof Motherboard) {
@@ -86,12 +84,14 @@ public class OrderProcessor {
                 }
             }
         }
+        computerPartOrders.clear();
     }
 
     public void dispatchPeripherals() {
-        for (Map.Entry<UUID, List<Peripheral>> entry : peripheralOrders.entrySet()) {
+        System.out.println("----------Peripherals----------");
+        for (Map.Entry<UUID, ArrayList<Peripheral>> entry : peripheralOrders.entrySet()) {
             UUID orderId = entry.getKey();
-            List<Peripheral> peripherals = entry.getValue();
+            ArrayList<Peripheral> peripherals = entry.getValue();
 
             for (Peripheral peripheral : peripherals) {
                 if (peripheral instanceof Printer) {
@@ -105,12 +105,14 @@ public class OrderProcessor {
                 }
             }
         }
+        peripheralOrders.clear();
     }
 
     public void dispatchServices() {
-        for (Map.Entry<UUID, List<Service>> entry : serviceOrders.entrySet()) {
+        System.out.println("----------Services----------");
+        for (Map.Entry<UUID, ArrayList<Service>> entry : serviceOrders.entrySet()) {
             UUID orderId = entry.getKey();
-            List<Service> services = entry.getValue();
+            ArrayList<Service> services = entry.getValue();
 
             for (Service service : services) {
                 if (service instanceof AssemblyService) {
@@ -124,12 +126,14 @@ public class OrderProcessor {
                 }
             }
         }
+        serviceOrders.clear();
     }
 
     public void dispatchCheese() {
-        for (Map.Entry<UUID, List<Cheese>> entry : cheeseOrders.entrySet()) {
+        System.out.println("----------Cheeses----------");
+        for (Map.Entry<UUID, ArrayList<Cheese>> entry : cheeseOrders.entrySet()) {
             UUID orderId = entry.getKey();
-            List<Cheese> cheeses = entry.getValue();
+            ArrayList<Cheese> cheeses = entry.getValue();
 
             for (Cheese cheese : cheeses) {
                 if (cheese instanceof Cheddar) {
@@ -139,12 +143,14 @@ public class OrderProcessor {
                 }
             }
         }
+        cheeseOrders.clear();
     }
 
     public void dispatchFruit() {
-        for (Map.Entry<UUID, List<Fruit>> entry : fruitOrders.entrySet()) {
+        System.out.println("----------Fruits----------");
+        for (Map.Entry<UUID, ArrayList<Fruit>> entry : fruitOrders.entrySet()) {
             UUID orderId = entry.getKey();
-            List<Fruit> fruits = entry.getValue();
+            ArrayList<Fruit> fruits = entry.getValue();
 
             for (Fruit fruit : fruits) {
                 if (fruit instanceof Apple) {
@@ -154,5 +160,6 @@ public class OrderProcessor {
                 }
             }
         }
+        fruitOrders.clear();
     }
 }

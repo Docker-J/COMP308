@@ -2,23 +2,23 @@
  * Student ID: 3643836
  * Date: Jul 17th, 2023
  * 
- * ShippingLabel is a class that stores two mailing addresses, ship-from and ship-to.
- * The class is able to format the shipping label.
- * e.g.) "From: FullName
- * Street Address, City, Province, Postal Code"
+ * GenericOrder is class an abstract class which is a generic container of various types of order.
  * 
- * "To: FullName
- * Street Address, City, Province, Postal Code"
+ * ComputerOrder class only takes the products that implement the IComputerOrder interface.
+ * PartyTrayOrder class only takes the products that implement the IPartyTrayOrder interface.
+ * ComputerPartyOrder class only takes the products that implement the IComputerPartyOrder interface.
  * 
  * Description:
  * -public Shippinglabel(MailingAddress shipFrom, MailngAddress shipTo) - getting two MailingAddress objects
- * -public toString() - format the label
+ * -public UUID getOrderId(): return unique id of the order
+ * -public void addItem(T item): add T obejct to the order(list)
+ * -public ArrayList<T> getItems(): return items in the order
 */
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class GenericOrder<T> {
+public abstract class GenericOrder<T> {
     private ArrayList<T> items;
     private UUID orderNumber;
 

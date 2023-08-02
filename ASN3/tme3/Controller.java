@@ -15,11 +15,10 @@
 
 package ASN3.tme3;
 
+import java.io.Serializable;
 import java.util.*;
 
-import ASN3.GreenhouseControls.ControllerException;
-
-public class Controller {
+public class Controller implements Serializable {
   // A class from java.util to hold Event objects:
   private List<Event> eventList = new ArrayList<Event>();
 
@@ -33,11 +32,12 @@ public class Controller {
       // while you're selecting the elements in it:
       for (Event e : new ArrayList<Event>(eventList))
         if (e.ready()) {
+          System.out.println(e);
           try {
-            System.out.println(e);
             e.action();
             eventList.remove(e);
           } catch (ControllerException ex) {
+            eventList.remove(e);
             System.out.println(ex);
             shutdown();
           }
