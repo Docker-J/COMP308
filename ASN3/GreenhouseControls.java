@@ -19,6 +19,7 @@ package ASN3;
  */
 
 import java.io.*;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -205,11 +206,9 @@ public class GreenhouseControls extends Controller {
   // An example of an action() that inserts a
   // new one of itself into the event list:
   public class Bell extends Event {
-    private int ring;
 
-    public Bell(long delayTime, int ring) {
+    public Bell(long delayTime) {
       super(delayTime);
-      this.ring = ring;
     }
 
     public void action() {
@@ -337,7 +336,7 @@ public class GreenhouseControls extends Controller {
                 break;
               case "Bell":
                 for (int i = 0; i < ring; i++) {
-                  addEvent(new Bell(time, ring));
+                  addEvent(new Bell(time));
                   time += 2000;
                 }
                 break;
@@ -393,6 +392,10 @@ public class GreenhouseControls extends Controller {
         file.close();
 
         gc.getFixable(gc.getError()).fix();
+        List<Event> leftEvents = gc.getEvents();
+        for (Event event : leftEvents) {
+          event.start();
+        }
         gc.run();
       } catch (Exception e) {
         System.out.println("No file found");

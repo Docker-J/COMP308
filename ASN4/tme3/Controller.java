@@ -13,17 +13,29 @@
  *
  */
 
-package ASN3.tme3;
+package tme3;
 
-import java.io.Serializable;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Controller implements Serializable {
+public abstract class Controller {
   // A class from java.util to hold Event objects:
   private List<Event> eventList = new ArrayList<Event>();
 
   public void addEvent(Event c) {
     eventList.add(c);
+  }
+
+  public void addEvent(String eventName, long delayTime, Controller controller) {
+    try {
+      Class someEvent = Class.forName("tme3.event" + eventName);
+      Constructor constructor = someEvent.getConstructor(Controller.class, long.class);
+      Event event = (Event) constructor.newInstance(controller, delayTime);
+      this.addEvent(event);
+    } catch (Exception ex) {
+
+    }
   }
 
   public void run() {
@@ -32,7 +44,6 @@ public class Controller implements Serializable {
       // while you're selecting the elements in it:
       for (Event e : new ArrayList<Event>(eventList))
         if (e.ready()) {
-          System.out.println(e);
           try {
             e.action();
             eventList.remove(e);
@@ -41,15 +52,10 @@ public class Controller implements Serializable {
             System.out.println(ex);
             shutdown();
           }
-
         }
   }
 
-  public List<Event> getEvents() {
-    return eventList;
-  }
+  public abstract void shutdown();
 
-  public void shutdown() {
-  } /// :~
-
-}
+  public abstract void setVariable(String key, String value);
+} /// :~
