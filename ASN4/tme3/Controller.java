@@ -25,6 +25,8 @@ public abstract class Controller {
 
   public void addEvent(Event c) {
     eventList.add(c);
+    Thread t = new Thread(c);
+    t.start();
   }
 
   public void addEvent(String eventName, long delayTime, Controller controller) {
@@ -57,5 +59,5 @@ public abstract class Controller {
 
   public abstract void shutdown();
 
-  public abstract void setVariable(String key, String value);
+  public abstract void setVariable(String key, Object value);
 } /// :~

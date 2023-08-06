@@ -29,25 +29,28 @@ import tme3.Tuple;
 import tme3.events.Restart;
 
 public class GreenhouseControls extends Controller {
-  private ArrayList<Tuple> variables = new ArrayList<>();
+  private ArrayList<Tuple<String, Object>> variables = new ArrayList<>();
 
   @Override
-  public void setVariable(String key, String value) {
-    variables.put(key, value);
+  public void setVariable(String key, Object value) {
+    variables.add(new Tuple<String, Object>(key, value));
   }
 
   @Override
   public void shutdown() {
     try {
       FileWriter errorLog = new FileWriter("error.log");
-      String errorcode = this.variables.get("errorcode");
-
-      if (errorcode == "1") {
-        System.out.println(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
-        errorLog.write(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
-      } else if (errorcode == "2") {
-        System.out.println(System.currentTimeMillis() + " PowerOut " + errorcode);
-        errorLog.write(System.currentTimeMillis() + " PowerOut " + errorcode);
+      for (Tuple<String, Object> tuple : variables) {
+        if (tuple.getKey().equals("errorcode")) {
+          int errorcode = (int) tuple.getValue();
+          if (errorcode == 1) {
+            System.out.println(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
+            errorLog.write(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
+          } else if (errorcode == 2) {
+            System.out.println(System.currentTimeMillis() + " PowerOut " + errorcode);
+            errorLog.write(System.currentTimeMillis() + " PowerOut " + errorcode);
+          }
+        }
       }
       errorLog.close();
 

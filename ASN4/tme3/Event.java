@@ -38,11 +38,20 @@ public abstract class Event implements Runnable {
 
   @Override
   public void run() {
-    try {
-      Thread.sleep(delayTime);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+    synchronized (this.controller) {
+      try {
+        this.action();
+      } catch (ControllerException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
+
+    // try {
+    // Thread.sleep(delayTime);
+    // } catch (InterruptedException e) {
+    // e.printStackTrace();
+    // }
   }
 
   public abstract void action() throws ControllerException;
