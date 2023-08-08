@@ -17,7 +17,9 @@
 
 package tme3;
 
-public abstract class Event implements Runnable {
+import java.io.Serializable;
+
+public abstract class Event implements Runnable, Serializable {
   private long eventTime;
   protected final long delayTime;
   protected Controller controller;
@@ -25,7 +27,7 @@ public abstract class Event implements Runnable {
   public Event(long delayTime, Controller controller) {
     this.delayTime = delayTime;
     this.controller = controller;
-    start();
+    // start();
   }
 
   public void start() { // Allows restarting
@@ -38,12 +40,19 @@ public abstract class Event implements Runnable {
 
   @Override
   public void run() {
-    synchronized (this.controller) {
-      try {
-        this.action();
-      } catch (ControllerException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+    start();
+    while (true) {
+      if (this.ready()) {
+        synchronized (this.controller) {
+          this.controller.removeEvent(this);
+          try {
+            this.action();
+            System.out.println(this);
+          } catch (ControllerException e) {
+            this.controller.shutdown();
+          }
+        }
+        break;
       }
     }
 

@@ -11,7 +11,7 @@ public class PowerOut extends Event {
     }
 
     @Override
-    public void action() {
+    public void action() throws ControllerException {
         this.controller.setVariable("errorcode", 2);
         this.controller.setVariable("PowerOn", false);
 

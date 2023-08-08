@@ -15,47 +15,56 @@
 
 package tme3;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Controller {
+public abstract class Controller implements Serializable {
   // A class from java.util to hold Event objects:
   private List<Event> eventList = new ArrayList<Event>();
 
   public void addEvent(Event c) {
-    eventList.add(c);
     Thread t = new Thread(c);
     t.start();
   }
 
   public void addEvent(String eventName, long delayTime, Controller controller) {
     try {
-      Class someEvent = Class.forName("tme3.event" + eventName);
-      Constructor constructor = someEvent.getConstructor(Controller.class, long.class);
-      Event event = (Event) constructor.newInstance(controller, delayTime);
+      Class<?> someEvent = Class.forName("tme3.events." + eventName);
+      Constructor<?> constructor = someEvent.getConstructor(long.class, Controller.class);
+      Event event = (Event) constructor.newInstance(delayTime, controller);
+      eventList.add(event);
       this.addEvent(event);
     } catch (Exception ex) {
-
+      System.out.println(ex);
     }
   }
 
-  public void run() {
-    while (eventList.size() > 0)
-      // Make a copy so you're not modifying the list
-      // while you're selecting the elements in it:
-      for (Event e : new ArrayList<Event>(eventList))
-        if (e.ready()) {
-          try {
-            e.action();
-            eventList.remove(e);
-          } catch (ControllerException ex) {
-            eventList.remove(e);
-            System.out.println(ex);
-            shutdown();
-          }
-        }
+  public List<Event> getEvents() {
+    return eventList;
   }
+
+  public void removeEvent(Event event) {
+    eventList.remove(event);
+  }
+
+  // public void run() {
+  // while (eventList.size() > 0)
+  // // Make a copy so you're not modifying the list
+  // // while you're selecting the elements in it:
+  // for (Event e : new ArrayList<Event>(eventList))
+  // if (e.ready()) {
+  // try {
+  // e.action();
+  // eventList.remove(e);
+  // } catch (ControllerException ex) {
+  // eventList.remove(e);
+  // System.out.println(ex);
+  // shutdown();
+  // }
+  // }
+  // }
 
   public abstract void shutdown();
 

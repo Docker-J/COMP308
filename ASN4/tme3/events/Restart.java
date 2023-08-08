@@ -10,7 +10,7 @@ import tme3.Controller;
 import tme3.Event;
 
 public class Restart extends Event {
-    String eventsFile;
+    private String eventsFile;
 
     public Restart(long delayTime, Controller controller, String filename) {
         super(delayTime, controller);
@@ -19,7 +19,7 @@ public class Restart extends Event {
 
     public void action() {
         try {
-            File file = new File("./ASN4/" + eventsFile);
+            File file = new File(eventsFile);
             Scanner scanner = new Scanner(file);
             Pattern pattern = Pattern.compile("Event=([^,]+),time=([^,]+)(?:,rings=([^,]+))?");
 
@@ -34,9 +34,9 @@ public class Restart extends Event {
                         ring = Integer.parseInt(m.group(3));
                     }
 
-                    if (event == "Bell") {
+                    if (event.equals("Bell")) {
                         for (int i = 0; i < ring; i++) {
-                            this.controller.addEvent(event, time, controller);
+                            this.controller.addEvent("Bell", time, controller);
                             time += 2000;
                         }
                     } else {

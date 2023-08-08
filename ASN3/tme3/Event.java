@@ -15,9 +15,11 @@
  *
  */
 
-package ASN3.tme3;
+package tme3;
 
-import java.io.*;
+import java.io.Serializable;
+
+import ControllerException;
 
 public abstract class Event implements Serializable {
   private long eventTime;

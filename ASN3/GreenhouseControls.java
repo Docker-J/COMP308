@@ -1,5 +1,3 @@
-package ASN3;
-
 //: innerclasses/GreenhouseControls.java
 // This produces a specific application of the
 // control system, all in a single class. Inner
@@ -24,7 +22,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import ASN3.tme3.*;
+import tme3.*;
 
 interface Fixable {
   // turns Power on, fix window and zeros out error codes

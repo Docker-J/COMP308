@@ -17,32 +17,40 @@
  */
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import tme3.Event;
+import tme3.fixable.FixWindow;
+import tme3.fixable.PowerOn;
 import tme3.Controller;
-import tme3.Tuple;
+import tme3.Fixable;
 import tme3.events.Restart;
 
-public class GreenhouseControls extends Controller {
-  private ArrayList<Tuple<String, Object>> variables = new ArrayList<>();
+public class GreenhouseControls extends Controller implements Serializable {
+  // private ArrayList<Tuple<String, Object>> variables = new ArrayList<>();
+  private HashMap<String, Object> variables = new HashMap<>();
 
   @Override
   public void setVariable(String key, Object value) {
-    variables.add(new Tuple<String, Object>(key, value));
+    variables.put(key, value);
   }
 
   @Override
   public void shutdown() {
     try {
       FileWriter errorLog = new FileWriter("error.log");
-      for (Tuple<String, Object> tuple : variables) {
-        if (tuple.getKey().equals("errorcode")) {
-          int errorcode = (int) tuple.getValue();
+      for (Map.Entry<String, Object> entry : variables.entrySet()) {
+        if (entry.getKey().equals("errorcode")) {
+          int errorcode = (int) entry.getValue();
           if (errorcode == 1) {
             System.out.println(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
             errorLog.write(System.currentTimeMillis() + " WindowMalfunction " + errorcode);
@@ -72,6 +80,38 @@ public class GreenhouseControls extends Controller {
     System.out.println("  java GreenhouseControls -d dump.out");
   }
 
+  int getError() {
+    return (Integer) variables.get("errorcode");
+  };
+
+  Fixable getFixable(int errorcode) {
+    if (errorcode == 1) {
+      return new FixWindow(this);
+    }
+
+    return new PowerOn(this);
+  }
+
+  public void restore(String dump) {
+    System.out.println("Restoring System");
+    try {
+      FileInputStream file = new FileInputStream(new File(dump));
+      ObjectInputStream ois = new ObjectInputStream(file);
+      GreenhouseControls gc = (GreenhouseControls) ois.readObject();
+      ois.close();
+      file.close();
+
+      gc.getFixable(gc.getError()).fix();
+      List<Event> leftEvents = gc.getEvents();
+      for (Event event : leftEvents) {
+        event.start();
+        gc.addEvent(event);
+      }
+    } catch (Exception e) {
+      System.out.println("No file found");
+    }
+  }
+
   // ---------------------------------------------------------
   public static void main(String[] args) {
     try {
@@ -89,7 +129,10 @@ public class GreenhouseControls extends Controller {
         gc.addEvent(new Restart(0, gc, filename));
       }
 
-      gc.run();
+      if (option.equals("-d")) {
+        gc.restore(filename);
+      }
+
     } catch (ArrayIndexOutOfBoundsException e) {
       System.out.println("Invalid number of parameters");
       printUsage();

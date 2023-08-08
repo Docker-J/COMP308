@@ -13,7 +13,7 @@
  *
  */
 
-package ASN3.tme3;
+package tme3;
 
 import java.io.Serializable;
 import java.util.*;

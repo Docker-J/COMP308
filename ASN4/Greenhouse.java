@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import tme3.events.Restart;
+
 public class Greenhouse extends JFrame implements ActionListener {
     String[] buttons_str = { "Start", "Restart", "Terminate", "Suspend", "Resume" };
     JButton[] buttons = new JButton[5];
@@ -55,6 +57,7 @@ public class Greenhouse extends JFrame implements ActionListener {
         for (int i = 0; i < buttons.length; i++) {
             JButton button = new JButton(buttons_str[i]);
             button.addActionListener(this);
+            button.setEnabled(false);
             buttons[i] = button;
             p.add(button);
         }
@@ -82,6 +85,13 @@ public class Greenhouse extends JFrame implements ActionListener {
         if (e.getSource() == menuItems[2]) {
             JFileChooser chooser = new JFileChooser();
             int returnVal = chooser.showOpenDialog(null);
+            System.out.println(returnVal);
+
+            if (returnVal == 0) {
+                buttons[0].setEnabled(true);
+                GreenhouseControls gc = new GreenhouseControls();
+                gc.addEvent(new Restart(0, gc, "test"));
+            }
 
         }
 
