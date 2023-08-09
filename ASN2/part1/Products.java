@@ -1,4 +1,3 @@
-
 /******************************************************************
  * COMP308 Java for Programmer,
  * SCIS, Athabasca University

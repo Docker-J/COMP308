@@ -40,9 +40,13 @@ public class OrderProcessor {
             UUID orderId = order.getOrderId();
             ArrayList<?> items = order.getItems();
 
+            // Sort the items in the order by its type and group by order id
+            // (Computer Part, Peripheral, Cheese, Fruit, and Service)
             for (Object item : items) {
                 if (item instanceof ComputerPart) {
                     ComputerPart computerPart = (ComputerPart) item;
+                    // Add the item into the HashMap. If orderId not exists as a key, initialize an
+                    // arraylist for the order
                     computerPartOrders.computeIfAbsent(orderId, k -> new ArrayList<>()).add(computerPart);
                 } else if (item instanceof Peripheral) {
                     Peripheral peripheral = (Peripheral) item;
@@ -81,6 +85,9 @@ public class OrderProcessor {
                     Drive drive = (Drive) computerPart;
                     System.out.println("Drive     type=" + drive.getType() + ", speed=" + drive.getSpeed() + ", price="
                             + drive.price() + ", order number=" + orderId);
+                } else {
+                    System.out.println(
+                            "Some Computer Part     price=" + computerPart.price() + ", order number=" + orderId);
                 }
             }
         }
@@ -102,6 +109,8 @@ public class OrderProcessor {
                     Monitor monitor = (Monitor) peripheral;
                     System.out.println("Monitor     model=" + monitor.getModel() + ", price=" + monitor.price()
                             + ", order number=" + orderId);
+                } else {
+                    System.out.println("Some Peripheral     price=" + peripheral.price() + ", order number=" + orderId);
                 }
             }
         }
@@ -123,6 +132,9 @@ public class OrderProcessor {
                     DeliveryService deliveryService = (DeliveryService) service;
                     System.out.println("DeliveryService     courier=" + deliveryService.getCourier() + ", price="
                             + deliveryService.price() + ", order number=" + orderId);
+                } else {
+                    System.out
+                            .println("Some Service     price=" + service.price() + ", order number=" + orderId);
                 }
             }
         }
@@ -140,6 +152,8 @@ public class OrderProcessor {
                     System.out.println("Cheddar     price=" + cheese.price() + ", order number=" + orderId);
                 } else if (cheese instanceof Mozzarella) {
                     System.out.println("Mozzarella     price=" + cheese.price() + ", order number=" + orderId);
+                } else {
+                    System.out.println("Some Cheese     price=" + cheese.price() + ", order number=" + orderId);
                 }
             }
         }
@@ -157,6 +171,8 @@ public class OrderProcessor {
                     System.out.println("Apple     price=" + fruit.price() + ", order number=" + orderId);
                 } else if (fruit instanceof Orange) {
                     System.out.println("Orange     price=" + fruit.price() + ", order number=" + orderId);
+                } else {
+                    System.out.println("Some Fruit     price=" + fruit.price() + ", order number=" + orderId);
                 }
             }
         }
