@@ -19,8 +19,6 @@ package tme3;
 
 import java.io.Serializable;
 
-import ControllerException;
-
 public abstract class Event implements Serializable {
   private long eventTime;
   protected final long delayTime;

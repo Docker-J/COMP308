@@ -18,7 +18,7 @@ package tme3;
 import java.io.Serializable;
 import java.util.*;
 
-public class Controller implements Serializable {
+public abstract class Controller implements Serializable {
   // A class from java.util to hold Event objects:
   private List<Event> eventList = new ArrayList<Event>();
 
@@ -37,8 +37,8 @@ public class Controller implements Serializable {
             e.action();
             eventList.remove(e);
           } catch (ControllerException ex) {
-            eventList.remove(e);
             System.out.println(ex);
+            eventList.remove(e);
             shutdown();
           }
 
@@ -49,7 +49,6 @@ public class Controller implements Serializable {
     return eventList;
   }
 
-  public void shutdown() {
-  } /// :~
+  public abstract void shutdown(); /// :~
 
 }

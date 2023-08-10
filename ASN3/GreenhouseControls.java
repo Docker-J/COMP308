@@ -16,23 +16,22 @@
  *
  */
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import tme3.*;
-
-interface Fixable {
-  // turns Power on, fix window and zeros out error codes
-  void fix();
-
-  // logs to a text file in the current directory called fix.log
-  // prints to the console, and identify time and nature of
-  // the fix
-  void log();
-}
+import tme3.Controller;
+import tme3.ControllerException;
+import tme3.Event;
 
 public class GreenhouseControls extends Controller {
   private boolean light = false;
@@ -62,10 +61,10 @@ public class GreenhouseControls extends Controller {
       out.writeObject(this);
       out.close();
       dumpOut.close();
-
-      System.exit(-1);
     } catch (IOException exception) {
       System.out.println(exception);
+    } finally {
+      this.addEvent(new Terminate(0));
     }
   }
 
@@ -76,9 +75,10 @@ public class GreenhouseControls extends Controller {
   Fixable getFixable(int errorcode) {
     if (errorcode == 1) {
       return new FixWindow();
+    } else if (errorcode == 2) {
+      return new PowerOn();
     }
-
-    return new PowerOn();
+    return null;
   }
 
   public class LightOn extends Event {
@@ -292,65 +292,70 @@ public class GreenhouseControls extends Controller {
 
     public void action() {
       try {
-        File file = new File("./ASN3/" + eventsFile);
+        File file = new File(eventsFile);
         Scanner scanner = new Scanner(file);
-        Pattern pattern = Pattern.compile("Event=([^,]+),time=([^,]+)(?:,rings=([^,]+))?");
+        Pattern pattern = Pattern.compile("Event=([^,]+),time=([0-9]+)(?:,rings=([0-9]+))?");
 
         while (scanner.hasNextLine()) {
           Matcher m = pattern.matcher(scanner.nextLine());
 
-          while (m.find()) {
-            String event = m.group(1);
-            Long time = Long.parseLong(m.group(2));
-            int ring = 1;
-            if (m.group(3) != null) {
-              ring = Integer.parseInt(m.group(3));
-            }
-
-            switch (event) {
-              case "LightOn":
-                addEvent(new LightOn(time));
-                break;
-              case "LightOff":
-                addEvent(new LightOff(time));
-                break;
-              case "WaterOn":
-                addEvent(new WaterOn(time));
-                break;
-              case "WaterOff":
-                addEvent(new WaterOff(time));
-                break;
-              case "FansOn":
-                addEvent(new FansOn(time));
-                break;
-              case "FansOff":
-                addEvent(new FansOff(time));
-                break;
-              case "ThermostatNight":
-                addEvent(new ThermostatNight(time));
-                break;
-              case "ThermostatDay":
-                addEvent(new ThermostatDay(time));
-                break;
-              case "Bell":
-                for (int i = 0; i < ring; i++) {
-                  addEvent(new Bell(time));
-                  time += 2000;
-                }
-                break;
-              case "WindowMalfunction":
-                addEvent(new WindowMalfunction(time));
-                break;
-              case "PowerOut":
-                addEvent(new PowerOut(time));
-                break;
-              case "Terminate":
-                addEvent(new Terminate(time));
-                break;
-              default:
-                System.out.println("Wrong Event");
-            }
+          if (!m.matches()) {
+            System.out.println("Wrong Event File");
+            System.exit(-1);
           }
+
+          String event = m.group(1);
+          Long time = Long.parseLong(m.group(2));
+          int ring = 1;
+          if (m.group(3) != null) {
+            ring = Integer.parseInt(m.group(3));
+          }
+
+          switch (event) {
+            case "LightOn":
+              addEvent(new LightOn(time));
+              break;
+            case "LightOff":
+              addEvent(new LightOff(time));
+              break;
+            case "WaterOn":
+              addEvent(new WaterOn(time));
+              break;
+            case "WaterOff":
+              addEvent(new WaterOff(time));
+              break;
+            case "FansOn":
+              addEvent(new FansOn(time));
+              break;
+            case "FansOff":
+              addEvent(new FansOff(time));
+              break;
+            case "ThermostatNight":
+              addEvent(new ThermostatNight(time));
+              break;
+            case "ThermostatDay":
+              addEvent(new ThermostatDay(time));
+              break;
+            case "Bell":
+              for (int i = 0; i < ring; i++) {
+                addEvent(new Bell(time));
+                time += 2000;
+              }
+              break;
+            case "WindowMalfunction":
+              addEvent(new WindowMalfunction(time));
+              break;
+            case "PowerOut":
+              addEvent(new PowerOut(time));
+              break;
+            case "Terminate":
+              addEvent(new Terminate(time));
+              break;
+            default:
+              System.out.println("Wrong Event Name");
+              System.exit(-1);
+          }
+
         }
         scanner.close();
 
@@ -434,3 +439,13 @@ public class GreenhouseControls extends Controller {
   }
 
 } /// :~
+
+interface Fixable {
+  // turns Power on, fix window and zeros out error codes
+  void fix();
+
+  // logs to a text file in the current directory called fix.log
+  // prints to the console, and identify time and nature of
+  // the fix
+  void log();
+}
