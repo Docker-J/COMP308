@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import tme3.events.Restart;
+import tme3.events.Terminate;
 
 public class Greenhouse extends JFrame implements ActionListener {
     String[] buttons_str = { "Start", "Restart", "Terminate", "Suspend", "Resume" };
@@ -25,6 +26,7 @@ public class Greenhouse extends JFrame implements ActionListener {
     JPanel p;
     JTextArea textArea;
 
+    GreenhouseControls gc;
     String eventFile;
 
     Greenhouse() {
@@ -85,12 +87,11 @@ public class Greenhouse extends JFrame implements ActionListener {
         if (e.getSource() == menuItems[2]) {
             JFileChooser chooser = new JFileChooser();
             int returnVal = chooser.showOpenDialog(null);
-            System.out.println(returnVal);
 
             if (returnVal == 0) {
                 buttons[0].setEnabled(true);
-                GreenhouseControls gc = new GreenhouseControls();
-                gc.addEvent(new Restart(0, gc, "test"));
+                gc = new GreenhouseControls();
+                eventFile = "ASN4/examples4.txt";
             }
 
         }
@@ -102,6 +103,10 @@ public class Greenhouse extends JFrame implements ActionListener {
         // Start
         if (e.getSource() == buttons[0]) {
             textArea.append("Start\n");
+            gc.addEvent(new Restart(0, gc, "ASN4/examples4.txt"));
+            buttons[0].setEnabled(false);
+            buttons[2].setEnabled(true);
+            buttons[3].setEnabled(true);
         }
         // Restart
         if (e.getSource() == buttons[1]) {
@@ -110,10 +115,13 @@ public class Greenhouse extends JFrame implements ActionListener {
         // Terminate
         if (e.getSource() == buttons[2]) {
             textArea.append("Terminate\n");
+            gc.addEvent(new Terminate(0, gc));
         }
         // Suspend
         if (e.getSource() == buttons[3]) {
             textArea.append("Suspend\n");
+            buttons[3].setEnabled(false);
+            buttons[4].setEnabled(true);
         }
         // Resume
         if (e.getSource() == buttons[4]) {
