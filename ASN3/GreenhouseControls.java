@@ -16,6 +16,83 @@
  *
  */
 
+/*
+ * Edited By: Junesung Lee
+ * Student ID: 3643836
+ * Date: Aug 1st, 2023
+ * 
+ * Description:
+ * public GreenhouseControls() - Default Constructor
+ * public void shutdown() - log the error and serialize the controller when the error occurs to restore the controller later
+ * int getError() - return errorcode attribute
+ * Fixable getFixable(int errorcode) - return Fixable obejct depends on the errorcode. For 1, return FixWindow obejct. For 2, return PowerOn object.
+ * Events Inner Classes
+ *  public class LightOn
+ *    public LightOn(long delaytime) - constructor
+ *    public void action() - set the light attribute of the GreenhouseControls obejct to true
+ *    public String toString() - return "Light is on"
+ *  public class LightOn
+ *    public LightOff(long delaytime) - constructor
+ *    public void action() - set the light attribute of the GreenhouseControls obejct to false
+ *    public String toString() - return "Light is off"
+ *  public class WaterOn
+ *    public WaterOn(long delaytime) - constructor
+ *    public void action() - set the water attribute of the GreenhouseControls obejct to true
+ *    public String toString() - return "Greenhouse water is on"
+ *  public class WaterOff
+ *    public LightOn(long delaytime) - constructor
+ *    public void action() - set the water attribute of the GreenhouseControls obejct to false
+ *    public String toString() - return "Greenhouse water is off"
+ *  public class FansOn
+ *    public FansOn(long delaytime) - constructor
+ *    public void action() - set the fans attribute of the GreenhouseControls obejct to true
+ *    public String toString() - return "Greenhouse fans are on"
+ *  public class FansOff
+ *    public FansOff(long delaytime) - constructor
+ *    public void action() - set the fans attribute of the GreenhouseControls obejct to false
+ *    public String toString() - return "Greenhouse fans are off"
+ *  public class ThermostatNight
+ *    public ThermostatNight(long delaytime) - constructor
+ *    public void action() - set the thermostat attribute of the GreenhouseControls obejct to "Night"
+ *    public String toString() - return "Thermostat on night setting"
+ *  public class ThermostatDay
+ *    public ThermostatDay(long delaytime) - constructor
+ *    public void action() - set the thermostat attribute of the GreenhouseControls obejct to "Day"
+ *    public String toString() - return "Thermostat on day setting"
+ *  public class Bell
+ *    public Bell(long delayTime, int ring) - constructor, add (ring - 1) Bell event to the GrennhouseControls object with 2000msec of delay time between the each Bell event
+ *    public String toString() - return "Bing!"
+ *  public class WindowMalfunction
+ *    public WindowMalfunction(long delaytime) - constructor
+ *    public void action() - set the errorcode and windowok attributes of the GreenhouseControls object to 1 and false respectively and throw ControllerException
+ *    public String toString() - return "Window Malfunction!"
+ *  public class PowerOut
+ *    public Powerout(long delaytime) - constructor
+ *    public void action() - set the errocode and poweron attributes of the GreenhouseControls object to 2 and false respectively and throw ControllerException
+ *    public String toString() - return "Power Outage"
+ *  public class Restart
+ *    public Restart(long delaytime, filename) - constructor, set the eventFile attribute of the GreenhouseControls object to filename
+ *    public void action() - try to read the file, filename, add events listed in the file. If the format of the file is wrong or file does not exists, program will print out the problem and will be terminated.
+ *    public String toString() - return "Restarting system"
+ * Fixable Inner Classes
+ *  public class PowerOn
+ *    public PowerOn() - Default constructor
+ *    public void fix() - set the errorcode and poweron attributes of the GreenhouseControls object to 0 and true respectively and call log() function
+ *    public void log() - prints out "Power On!"
+ *  public class FixWindow
+ *    public FixWindow() - Default constructor
+ *    public void fix() - set the errorcode and windowok attributes of the GreenhouseControls object to 0 and true respectively and call log() function
+ *    public void log() - prints out "Window Fixed!"
+ * 
+ * public class Restore
+ *  public Restore(String dump) - Constructor. Try to read the file, dump, serialized GreenhouseControls object, and fix the issue with proper Fixable object then restore and run the GreenhouseControls object from where it left
+ * 
+ * public void printUsage() - prints out the proper usage of the program
+ * 
+ * Compile: javac *.java
+ * Run: java GreenhouseControls -f <filename>, or
+ *      java GreenhouseControls -d dump.out
+ */
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -204,13 +281,19 @@ public class GreenhouseControls extends Controller {
   // An example of an action() that inserts a
   // new one of itself into the event list:
   public class Bell extends Event {
+    int ring;
 
-    public Bell(long delayTime) {
+    public Bell(long delayTime, int ring) {
       super(delayTime);
+      this.ring = ring;
+      // add Bell events if the number of the rings is greater than 0
+      // when the first bell event actioned and spearated them by 2000 msec.
+      for (int i = 1; i < ring; i++) {
+        addEvent(new Bell(delayTime + 2000 * i, 0));
+      }
     }
 
     public void action() {
-      // nothing to do
     }
 
     public String toString() {
@@ -300,7 +383,7 @@ public class GreenhouseControls extends Controller {
           Matcher m = pattern.matcher(scanner.nextLine());
 
           if (!m.matches()) {
-            System.out.println("Wrong Event File");
+            System.out.println("Wrong Event File Format");
             System.exit(-1);
           }
 
@@ -309,6 +392,11 @@ public class GreenhouseControls extends Controller {
           int ring = 1;
           if (m.group(3) != null) {
             ring = Integer.parseInt(m.group(3));
+          }
+
+          if (ring <= 0) {
+            System.out.println("Wrong Event File Format");
+            System.exit(-1);
           }
 
           switch (event) {
@@ -337,10 +425,7 @@ public class GreenhouseControls extends Controller {
               addEvent(new ThermostatDay(time));
               break;
             case "Bell":
-              for (int i = 0; i < ring; i++) {
-                addEvent(new Bell(time));
-                time += 2000;
-              }
+              addEvent(new Bell(time, ring));
               break;
             case "WindowMalfunction":
               addEvent(new WindowMalfunction(time));

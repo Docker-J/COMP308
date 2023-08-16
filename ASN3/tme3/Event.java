@@ -15,6 +15,18 @@
  *
  */
 
+/*
+* Edited By: Junesung Lee
+* Student ID: 3643836
+* Date: Aug 1st, 2023
+* 
+* Description:
+* public Event(long delayTime) - constructor, set the delaytime attribute and call start() function
+* public void start() - set the eventTime attribute to System.currentTimeMillis() + delayTime attribute
+* public boolean ready() - return true if System.currentTimeMillis() is greater or equal than the eventTime attribute.
+* public abstract void action() trhows ControllerException - abtract method named action and can throw ControllerException
+*/
+
 package tme3;
 
 import java.io.Serializable;

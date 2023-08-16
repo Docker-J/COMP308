@@ -13,6 +13,18 @@
  *
  */
 
+/*
+* Edited By: Junesung Lee
+* Student ID: 3643836
+* Date: Aug 1st, 2023
+* 
+* Description:
+* public void addEvent(Event c) - Add Event c to the List, eventList.
+* public void run() - Reun through the List, eventList, and trigger the event's action as they are ready. Handling ControllerException.
+* public List<Event> getEvents() - return the eventList List
+* public abstract void shutdown() - abtract method named shutdown
+*/
+
 package tme3;
 
 import java.io.Serializable;
