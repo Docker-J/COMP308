@@ -23,25 +23,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import tme3.Event;
-import tme3.fixable.FixWindow;
-import tme3.fixable.PowerOn;
 import tme3.Controller;
+import tme3.Event;
 import tme3.Fixable;
 import tme3.events.Restart;
+import tme3.fixable.FixWindow;
+import tme3.fixable.PowerOn;
 
-public class GreenhouseControls extends Controller implements Serializable {
+public class GreenhouseControls extends Controller {
   // private ArrayList<Tuple<String, Object>> variables = new ArrayList<>();
   private HashMap<String, Object> variables = new HashMap<>();
 
   @Override
   public void setVariable(String key, Object value) {
     variables.put(key, value);
+  }
+
+  public Object getVariable(String key) {
+    return variables.get(key);
   }
 
   @Override
@@ -93,7 +96,6 @@ public class GreenhouseControls extends Controller implements Serializable {
   }
 
   public void restore(String dump) {
-    System.out.println("Restoring System");
     try {
       FileInputStream file = new FileInputStream(new File(dump));
       ObjectInputStream ois = new ObjectInputStream(file);
@@ -108,6 +110,7 @@ public class GreenhouseControls extends Controller implements Serializable {
         gc.addEvent(event);
       }
     } catch (Exception e) {
+      System.out.println(e);
       System.out.println("No file found");
     }
   }
@@ -138,5 +141,6 @@ public class GreenhouseControls extends Controller implements Serializable {
       printUsage();
     }
   }
+}
 
-} /// :~
+/// :~

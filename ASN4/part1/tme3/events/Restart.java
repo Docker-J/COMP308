@@ -35,10 +35,7 @@ public class Restart extends Event {
                     }
 
                     if (event.equals("Bell")) {
-                        for (int i = 0; i < ring; i++) {
-                            this.controller.addEvent("Bell", time, controller);
-                            time += 2000;
-                        }
+                        this.controller.addEvent("Bell", time, ring, controller);
                     } else {
                         this.controller.addEvent(event, time, controller);
                     }

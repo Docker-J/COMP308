@@ -20,12 +20,16 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import tme3.events.Bell;
+
 public abstract class Controller implements Serializable {
   // A class from java.util to hold Event objects:
-  private List<Event> eventList = new ArrayList<Event>();
+  private List<Event> eventList = new ArrayList<>();
+  private List<Thread> threads = new ArrayList<>();
 
   public void addEvent(Event c) {
     Thread t = new Thread(c);
+    threads.add(t);
     t.start();
   }
 
@@ -41,6 +45,18 @@ public abstract class Controller implements Serializable {
     }
   }
 
+  public void addEvent(String eventName, long delayTime, int ring, Controller controller) {
+    try {
+      Class<?> someEvent = Class.forName("tme3.events." + eventName);
+      Constructor<?> constructor = someEvent.getConstructor(long.class, int.class, Controller.class);
+      Event event = (Bell) constructor.newInstance(delayTime, ring, controller);
+      eventList.add(event);
+      this.addEvent(event);
+    } catch (Exception ex) {
+      System.out.println(ex);
+    }
+  }
+
   public List<Event> getEvents() {
     return eventList;
   }
@@ -49,24 +65,14 @@ public abstract class Controller implements Serializable {
     eventList.remove(event);
   }
 
-  // public void run() {
-  // while (eventList.size() > 0)
-  // // Make a copy so you're not modifying the list
-  // // while you're selecting the elements in it:
-  // for (Event e : new ArrayList<Event>(eventList))
-  // if (e.ready()) {
-  // try {
-  // e.action();
-  // eventList.remove(e);
-  // } catch (ControllerException ex) {
-  // eventList.remove(e);
-  // System.out.println(ex);
-  // shutdown();
-  // }
-  // }
-  // }
+  public List<Thread> getThreads() {
+    return threads;
+  }
 
   public abstract void shutdown();
 
   public abstract void setVariable(String key, Object value);
+
+  public abstract Object getVariable(String key);
+
 } /// :~

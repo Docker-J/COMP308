@@ -43,8 +43,8 @@ public abstract class Event implements Runnable, Serializable {
     start();
     while (true) {
       if (this.ready()) {
+        this.controller.removeEvent(this);
         synchronized (this.controller) {
-          this.controller.removeEvent(this);
           try {
             this.action();
             System.out.println(this);
@@ -55,12 +55,6 @@ public abstract class Event implements Runnable, Serializable {
         break;
       }
     }
-
-    // try {
-    // Thread.sleep(delayTime);
-    // } catch (InterruptedException e) {
-    // e.printStackTrace();
-    // }
   }
 
   public abstract void action() throws ControllerException;
