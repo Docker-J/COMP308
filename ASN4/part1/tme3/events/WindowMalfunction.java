@@ -29,7 +29,7 @@ public class WindowMalfunction extends Event {
     @Override
     public void action() throws ControllerException {
         this.controller.setVariable("errorcode", 1);
-        this.controller.setVariable("WindowOk", false);
+        this.controller.setVariable("windowok", false);
         throw new ControllerException("WindowMalfunction");
     }
 

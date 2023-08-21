@@ -29,7 +29,7 @@ public class PowerOut extends Event {
     @Override
     public void action() throws ControllerException {
         this.controller.setVariable("errorcode", 2);
-        this.controller.setVariable("PowerOn", false);
+        this.controller.setVariable("poweron", false);
 
         throw new ControllerException("PowerOut");
     }
