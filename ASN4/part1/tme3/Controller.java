@@ -22,17 +22,31 @@ import java.util.List;
 
 import tme3.events.Bell;
 
+/**
+ * Abstract Class that act as a controller
+ */
 public abstract class Controller implements Serializable {
   // A class from java.util to hold Event objects:
   private List<Event> eventList = new ArrayList<>();
-  private List<Thread> threads = new ArrayList<>();
 
+  /**
+   * Create and start thread with the Event c
+   * 
+   * @param c Event
+   */
   public void addEvent(Event c) {
     Thread t = new Thread(c);
-    threads.add(t);
     t.start();
   }
 
+  /**
+   * Create with the parameters and add Event to the eventList and call
+   * addEvent(Event c) to start the event
+   * 
+   * @param eventName  Name of the event
+   * @param delayTime  Delay time of the Event
+   * @param controller Controller of the Event
+   */
   public void addEvent(String eventName, long delayTime, Controller controller) {
     try {
       Class<?> someEvent = Class.forName("tme3.events." + eventName);
@@ -41,10 +55,21 @@ public abstract class Controller implements Serializable {
       eventList.add(event);
       this.addEvent(event);
     } catch (Exception ex) {
-      System.out.println(ex);
+      System.out.println("Wrong Event");
+      System.exit(-1);
     }
   }
 
+  /**
+   * Create Bell Event that has an extra parameter, ringm and add Event to the
+   * eventList and call
+   * addEvent(Event c) to start the event
+   * 
+   * @param eventName  Name of the event
+   * @param delayTime  Delay time of the Event
+   * @param ring       Number of rings for Bell event
+   * @param controller Controller of the Event
+   */
   public void addEvent(String eventName, long delayTime, int ring, Controller controller) {
     try {
       Class<?> someEvent = Class.forName("tme3.events." + eventName);
@@ -53,26 +78,46 @@ public abstract class Controller implements Serializable {
       eventList.add(event);
       this.addEvent(event);
     } catch (Exception ex) {
-      System.out.println(ex);
+      System.out.println("Wrong Event");
+      System.exit(-1);
     }
   }
 
+  /**
+   * Method that returns eventList which contains the list of the Events that are
+   * waiting to be actioned
+   * 
+   * @return List of the Events that are waiting to action
+   */
   public List<Event> getEvents() {
     return eventList;
   }
 
+  /**
+   * Remove the Event event from the eventList
+   * 
+   * @param event Targeted Event to remove from the list
+   */
   public void removeEvent(Event event) {
     eventList.remove(event);
   }
 
-  public List<Thread> getThreads() {
-    return threads;
-  }
+  /**
+   * Abstract method to implment that go through shutdown process
+   * 
+   * @param delayTime
+   */
+  public abstract void shutdown(long delayTime);
 
-  public abstract void shutdown();
-
+  /**
+   * Abstract method to implement that set the variable with the key and value
+   * pair
+   * 
+   * @param key
+   * @param value
+   */
   public abstract void setVariable(String key, Object value);
 
-  public abstract Object getVariable(String key);
+  // public abstract Object getVariable(String key);
 
 } /// :~

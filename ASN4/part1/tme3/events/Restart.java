@@ -43,21 +43,30 @@ public class Restart extends Event {
             while (scanner.hasNextLine()) {
                 Matcher m = pattern.matcher(scanner.nextLine());
 
-                while (m.find()) {
-                    String event = m.group(1);
-                    Long time = Long.parseLong(m.group(2));
-                    int ring = 1;
-                    if (m.group(3) != null) {
-                        ring = Integer.parseInt(m.group(3));
-                    }
+                if (!m.matches()) {
+                    System.out.println("Wrong Event File Format");
+                    System.exit(-1);
+                }
 
-                    if (event.equals("Bell")) {
-                        this.controller.addEvent("Bell", time, ring, controller);
-                    } else {
-                        this.controller.addEvent(event, time, controller);
-                    }
+                String event = m.group(1);
+                Long time = Long.parseLong(m.group(2));
+                int ring = 1;
+                if (m.group(3) != null) {
+                    ring = Integer.parseInt(m.group(3));
+                }
+
+                if (ring <= 0) {
+                    System.out.println("Wrong Event File Format");
+                    System.exit(-1);
+                }
+
+                if (event.equals("Bell")) {
+                    this.controller.addEvent("Bell", time, ring, controller);
+                } else {
+                    this.controller.addEvent(event, time, controller);
                 }
             }
+
             scanner.close();
 
         } catch (FileNotFoundException exception) {

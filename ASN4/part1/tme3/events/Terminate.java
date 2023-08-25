@@ -25,6 +25,9 @@ public class Terminate extends Event {
      */
     @Override
     public void action() {
+        for (Event event : this.controller.getEvents()) {
+            event.stop();
+        }
         System.exit(0);
     }
 

@@ -1,11 +1,19 @@
 package tme3;
 
+/**
+ * Interface for Fixable of the greenhouse.
+ * 
+ * @author: Junesung Lee
+ * @date : Aug 23, 2023
+ */
 public interface Fixable {
-    // turns Power on, fix window and zeros out error codes
+    /**
+     * Fix the issue presents in the greenhouse.
+     */
     void fix();
 
-    // logs to a text file in the current directory called fix.log
-    // prints to the console, and identify time and nature of
-    // the fix
+    /**
+     * logs the detail of the fix to the text file.
+     */
     void log();
 }

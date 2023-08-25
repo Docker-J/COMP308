@@ -9,14 +9,33 @@ import java.util.regex.Pattern;
 import tme3.Controller;
 import tme3.Event;
 
+/**
+ * Class that represents Restart event of the greenhouse.
+ * 
+ * @author: Junesung Lee
+ * @date : Aug 23, 2023
+ */
 public class Restart extends Event {
     private String eventsFile;
 
+    /**
+     * Constructor.
+     * 
+     * @param delayTime
+     * @param controller
+     * @param filename
+     */
     public Restart(long delayTime, Controller controller, String filename) {
         super(delayTime, controller);
         eventsFile = filename;
     }
 
+    /**
+     * Method that performs proper action for the Event.
+     * This will parse targeted events file (filename) and add the parsed event to
+     * the controller.
+     * 
+     */
     public void action() {
         try {
             File file = new File(eventsFile);
@@ -51,6 +70,11 @@ public class Restart extends Event {
         }
     }
 
+    /**
+     * Returns the String that represents the Event
+     * 
+     * @return "Restarting System!"
+     */
     public String toString() {
         return "Restarting system";
     }
